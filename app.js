@@ -24,7 +24,7 @@ app.set('view engine', 'hbs')
 // 只有使用者的請求先經過body-parser的解讀後，我們才能在req.body中取得表單傳送過來的資料。
 app.use(express.urlencoded({ extended: true }))
 
-// setting route
+// setting all todo's route
 app.get('/', (req, res) => {
   Todo.find() // 叫Todo model去資料庫查找出資料
   // 撈資料以後想用 res.render()，要先用 .lean() 來處理
@@ -32,19 +32,25 @@ app.get('/', (req, res) => {
     .then(todos => res.render('index', { todos: todos })) // 將資料傳給 index(前端) 樣板
     .catch(error => console.error(error)) // 如果發生意外，執行錯誤處理
 })
-
+// setting create's route
 app.get('/todos/new', (req, res) => {
   return res.render('new')
 })
-
+// setting create todo route
 app.post('/todos', (req, res) => {
   const name = req.body.name // 從 req.body 拿出表單裡的 name 資料
-
   return Todo.create({ name }) // call Todo 直接新增資料
   .then(() => res.redirect('/') )
   .catch(error => console.error(error))
 })
-
+// setting detail route
+app.get('/todos/:id', (req, res) => {
+  const id = req.params.id
+  return Todo.findById(id)
+    .lean()
+    .then(todo => res.render('detail', { todo }))
+    .catch(error => console.error(error)) 
+}) 
 
 // setting port 3000
 app.listen(3000, () => {
