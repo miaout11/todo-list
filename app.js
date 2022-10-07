@@ -17,20 +17,36 @@ db.on('error', () => {
 db.once('open', () => {
   console.log('mongodb connected!')
 })
-
+// setting template engine
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs'}))
 app.set('view engine', 'hbs')
+// setting body-parser
+// 只有使用者的請求先經過body-parser的解讀後，我們才能在req.body中取得表單傳送過來的資料。
+app.use(express.urlencoded({ extended: true }))
 
 // setting route
 app.get('/', (req, res) => {
-  Todo.find() // get data from todo model 從資料庫查找出資料
+  Todo.find() // 叫Todo model去資料庫查找出資料
   // 撈資料以後想用 res.render()，要先用 .lean() 來處理
     .lean() // 把 Mongoose 的 Model 物件轉換成乾淨的 JavaScript 資料陣列
     .then(todos => res.render('index', { todos: todos })) // 將資料傳給 index(前端) 樣板
     .catch(error => console.error(error)) // 如果發生意外，執行錯誤處理
 })
 
-// 設定 port 3000
+app.get('/todos/new', (req, res) => {
+  return res.render('new')
+})
+
+app.post('/todos', (req, res) => {
+  const name = req.body.name // 從 req.body 拿出表單裡的 name 資料
+
+  return Todo.create({ name }) // call Todo 直接新增資料
+  .then(() => res.redirect('/') )
+  .catch(error => console.error(error))
+})
+
+
+// setting port 3000
 app.listen(3000, () => {
   console.log('App is running on http://localhost:3000')
 })
