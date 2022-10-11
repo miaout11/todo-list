@@ -1,9 +1,10 @@
-// 載入 express 並建構應用程式伺服器
-const express = require('express')
-const app = express()
-const exphbs = require('express-handlebars')
+const express = require('express') // 載入 express 並建構應用程式伺服器
+const exphbs = require('express-handlebars') // 載入handlebars
 const mongoose = require('mongoose') // 載入 mongoose
+const methodOverride = require('method-override') // 載入 method-override
+
 const Todo = require('./models/todo') // 載入 Todo model
+const app = express()
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true }) // 設定連線到 mongoDB
 
@@ -25,6 +26,8 @@ app.use(express.static('public'))
 // setting body-parser
 // 只有使用者的請求先經過body-parser的解讀後，我們才能在req.body中取得表單傳送過來的資料。
 app.use(express.urlencoded({ extended: true }))
+// use method-override
+app.use(methodOverride('_method'))
 
 // setting reading all todo's route
 app.get('/', (req, res) => {
@@ -60,7 +63,7 @@ app.get('/todos/:id/edit', (req, res) => {
     .then(todo => res.render('edit', { todo }))
     .catch(error => console.error(error))
 })
-app.post('/todos/:id/edit', (req, res) => {
+app.put('/todos/:id', (req, res) => {
   const id = req.params.id
   const { name, isDone } = req.body
   return Todo.findById(id)
@@ -73,7 +76,7 @@ app.post('/todos/:id/edit', (req, res) => {
     .catch(error => console.error(error))
 })
 // setting delete route
-app.post('/todos/:id/delete', (req, res) => {
+app.delete('/todos/:id', (req, res) => {
   const id = req.params.id
   return Todo.findById(id)
     .then(todo => todo.remove())
