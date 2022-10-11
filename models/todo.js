@@ -5,8 +5,9 @@ const todoSchema = new Schema({
         type: String, // 資料型別是字串
         required: true // 這是個必填欄位
     },
-    done: {
-        type: Boolean
+    isDone: {  // 在這裡我們將屬性取名為 isDone，通常變數名稱用is，暗示著這個變數的型別為布林值
+        type: Boolean,
+        default: false 
     }
 })
 module.exports = mongoose.model('Todo', todoSchema)
