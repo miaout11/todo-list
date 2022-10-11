@@ -1,14 +1,16 @@
-<a href="./todos/new">Create</a>
+<div style="margin: 50px 0 0 30px;">
+<button class="btn btn-danger"><a href="./todos/new" style="color: white;">Create</a></button>
 
 <ul>
     {{#each todos}}
-        <li>
+        <li style="padding: 10px;">
             {{this.name}}
             <a href="./todos/{{ this._id }}">Detail</a>
             <a href="./todos/{{ this._id }}/edit">Edit</a>
             <form action="./todos/{{ this._id }}/delete" method="POST" style="display: inline;">
-                <button type="submit">Delete</button>
+                <button type="submit" class="btn btn-dark">Delete</button>
             </form>
         </li>
     {{/each}}
 </ul>
+</div>

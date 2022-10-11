@@ -20,6 +20,8 @@ db.once('open', () => {
 // setting template engine
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
+// 設定載入靜態檔案
+app.use(express.static('public'))
 // setting body-parser
 // 只有使用者的請求先經過body-parser的解讀後，我們才能在req.body中取得表單傳送過來的資料。
 app.use(express.urlencoded({ extended: true }))
@@ -42,6 +44,7 @@ app.post('/todos', (req, res) => {
     .then(() => res.redirect('/'))
     .catch(error => console.error(error))
 })
+
 // setting detail page 使用動態參數":"，可以用req.params取出
 app.get('/todos/:id', (req, res) => {
   return Todo.findById(req.params.id) // 從資料庫找出特定一筆todo資料(使用findById)並用req.params取出資料
