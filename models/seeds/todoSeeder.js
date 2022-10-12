@@ -1,17 +1,8 @@
-const mongoose = require('mongoose') // 載入 mongoose
 const Todo = require('../todo') // 載入 todo model
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true }) // 設定連線到 mongoDB
+const db = require('../../config/mongoose') // 取得 db 執行 mongoose.js
 
-// 取得資料庫連線狀態
-const db = mongoose.connection
-// 連線異常
-db.on('error', () => {
-  console.log('mongodb error!')
-})
-// 連線成功
+// 連線成功後把seeder資料傳送到資料庫
 db.once('open', () => {
-  console.log('mongodb connected!')
-
   for (let i = 0; i < 10; i++) {
    Todo.create({name:`name-${i}`}) 
   }
