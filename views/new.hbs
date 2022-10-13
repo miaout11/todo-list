@@ -1,9 +1,9 @@
-<form action="/todos" method="POST">
+<form action="/todos" method="POST" style="display: inline;">
   {{!-- <input>標籤的name屬性很重要，它是HTTP傳輸時的資料名稱。
   這些資料會被放在 HTTP 的 request body裡，進到 Express.js 以後打包成 req.body 物件，
   就能在後續流程中使用 --}}
   <div class="input-group">
-    <input class="form-control" type="text" placeholder="name" name="name">
+    <input class="form-control" type="text" placeholder="name" name="name" required>
     <button class="btn btn-primary" type="submit">Create</button>
   </div>
 </form>
