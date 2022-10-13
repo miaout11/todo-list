@@ -1,11 +1,11 @@
 <div style="margin: 50px 0 0 30px;">
-<p>
+  <p>
     <input type="checkbox" name="isDone" {{#if todo.isDone }} checked {{/if}} disabled>
     {{ todo.name }}
-</p>
-<a href="/todos/{{ todo._id }}/edit">Edit</a>
-<a href="/">Back</a>
-<form action="/todos/{{ todo._id }}?_method=DELETE" method="POST" style="display: inline;">
+  </p>
+  <a href="/todos/{{ todo._id }}/edit">Edit</a>
+  <a href="/">Back</a>
+  <form action="/todos/{{ todo._id }}?_method=DELETE" method="POST" style="display: inline;">
     <button type="submit">Delete</button>
-</form>
+  </form>
 </div>
