@@ -7,15 +7,15 @@ const userSchema = new Schema({
   },
   email: {
     type: String,
-    required: TextTrackCue
+    required: true
   },
   password: {
     type: String,
     required: true
   },
   createdAt: {
-    type: Data,
-    default: Date.now
+    type: Date,
+    default: Date.now // 取得當下時間戳記(使用者註冊的當下時間)
   }
 })
 
