@@ -1,4 +1,5 @@
 const express = require('express') // 載入 express 並建構應用程式伺服器
+const session = require('express-session')
 const exphbs = require('express-handlebars') // 載入handlebars
 const methodOverride = require('method-override') // 載入 method-override
 
@@ -10,6 +11,13 @@ const app = express()
 // setting template engine
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
+
+// use express-session
+app.use(session({
+  secret: 'ThisIsMySecret',
+  resave: false,
+  saveUninitialized: true
+}))
 // 設定載入靜態檔案
 app.use(express.static('public'))
 // setting body-parser // express已經有內建body-parser
