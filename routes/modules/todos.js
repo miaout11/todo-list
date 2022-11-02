@@ -17,7 +17,7 @@ router.post('/', (req, res) => {
 // setting detail page 使用動態參數":"，可以用req.params取出
 router.get('/:id', (req, res) => {
   const userId = req.user._id
-  const _id = req.params.id
+  const _id = req.params.id // 改用 findOne 之後，Mongoose 就不會自動幫我們轉換 id 和 _id，所以這裡要寫和資料庫一樣的屬性名稱，也就是 _id。
   return Todo.findOne({ _id, userId }) // 從資料庫找出特定一筆todo資料(使用findById)並用req.params取出資料
     .lean() // 把資料轉換成單純的JS物件
     .then(todo => res.render('detail', { todo })) // 將資料傳給 detail(前端) 樣板

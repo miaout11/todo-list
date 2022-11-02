@@ -2,6 +2,7 @@ const express = require('express') // 載入 express 並建構應用程式伺服
 const session = require('express-session') // 載入 express-session
 const exphbs = require('express-handlebars') // 載入handlebars
 const methodOverride = require('method-override') // 載入 method-override
+const flash = require('connect-flash')
 
 const routes = require('./routes') // 引入路由器時路徑設定為 /routes 會自動尋找目錄下叫 index 的檔案
 
@@ -37,11 +38,16 @@ app.use(methodOverride('_method'))
 // 呼叫 passport function 以使用passport
 usePassport(app)
 
+// use connect-flash
+app.use(flash())
+
 app.use((req, res, next) => {
   // console.log(req.user)
   // res.locals 是 Express.js 幫我們開的一條捷徑，放在 res.locals 裡的資料，所有的 view 都可以存取。
   res.locals.isAuthenticated = req.isAuthenticated()
   res.locals.user = req.user
+  res.locals.success_msg = req.flash('success_msg')
+  res.locals.warning_msg = req.flash('warning_msg') // flash訊息取出後便會自動清除
   next()
 })
 
