@@ -11,9 +11,17 @@
 
 <body class="bg-light">
   <header>
-    <nav class="navbar navbar-dark justify-content-between" style="padding: 8px 16px; background-color: #999999;">
-      <a class="navbar-brand mx-auto" href="/">Todo List</a>
-      <a class="btn btn-light mx-auto" href="/todos/new">Create New Todo</a>
+    <nav class="navbar navbar-dark" style="background-color: #999999;">
+      <a class="navbar-brand" style="margin-left: 50px;" href="/">
+        {{#if isAuthenticated}}{{user.name}}'s {{/if}}
+        Todo List
+      </a>
+
+      {{#if isAuthenticated}}
+      <a href="/users/logout" class="btn btn-outline-light" style="margin-right: 100px;">Logout</a>
+      {{else}}
+      <a href="/users/login" class="btn btn-outline-light" style="margin-right: 100px;">Login</a>
+      {{/if}}
     </nav>
   </header>
   <main>

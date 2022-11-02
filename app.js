@@ -37,8 +37,15 @@ app.use(methodOverride('_method'))
 // 呼叫 passport function 以使用passport
 usePassport(app)
 
-// 重構路由器，將 request 導入路由器
-app.use(routes)
+app.use((req, res, next) => {
+  // console.log(req.user)
+  // res.locals 是 Express.js 幫我們開的一條捷徑，放在 res.locals 裡的資料，所有的 view 都可以存取。
+  res.locals.isAuthenticated = req.isAuthenticated()
+  res.locals.user = req.user
+  next()
+})
+
+app.use(routes) // 重構路由器，將 request 導入路由器
 
 // 設定應用程式監聽的埠號
 app.listen(PORT, () => {
