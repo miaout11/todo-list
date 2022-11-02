@@ -1,14 +1,18 @@
 const express = require('express') // use express
 const router = express.Router() // use express router
+const passport = require('passport')
+
 const User = require('../../models/user') // 載入user model
 
 // login page
 router.get('/login', (req, res) => {
   res.render('login')
 })
-router.post('/login', (req, res) => {
+router.post('/login', passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/users/login'
+}))
 
-})
 // register page
 router.get('/register', (req, res) => {
   res.render('register')
