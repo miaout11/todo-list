@@ -5,7 +5,8 @@ const Todo = require('../../models/todo') // 引用 Todo model
 
 // 定義首頁路由
 router.get('/', (req, res) => {
-  Todo.find() // 叫Todo model去資料庫查找出資料
+  const userId = req.user._id
+  Todo.find({ userId: userId }) // 叫Todo model去資料庫查找出 登入者 的資料，當 key-value 的名稱相同時，可以只寫一次。
     // 撈資料以後想用 res.render()，要先用 .lean() 來處理
     .lean() // 把 Mongoose 的 Model 物件轉換成乾淨的 JavaScript 資料陣列
     .sort({ _id: 'asc' }) // 根據 _id 升冪排序 desc則是降冪排序
