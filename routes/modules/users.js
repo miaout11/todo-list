@@ -1,6 +1,7 @@
-const express = require('express') // use express
+const express = require('express') // 載入 express框架
 const router = express.Router() // use express router
-const passport = require('passport')
+const passport = require('passport') // 載入 passport套件
+const bcrypt = require('bcryptjs') // 載入 bcryptjs套件
 
 const User = require('../../models/user') // 載入user model
 
@@ -51,11 +52,15 @@ router.post('/register', (req, res) => {
         })
       }
       // 如果還沒註冊：寫入資料庫
-      return User.create({ // use User model 
-        name,
-        email,
-        password
-      })
+      return bcrypt
+        .genSalt(10) // 產生「鹽」，並設定複雜度係數為10
+        .then(salt => bcrypt.hash(password, salt)) // 為使用者密碼「加鹽」，產生雜湊值
+        .then(hash =>
+          User.create({  // use User model
+            name,
+            email,
+            password: hash // 用雜湊值取代原本的使用者密碼
+          }))
         .then(() => res.redirect('/'))
         .catch(err => console.log(err))
       // 另一種寫法，先產生物件實例，再把實例存入User
