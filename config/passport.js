@@ -1,6 +1,7 @@
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
 const LocalStratege = require('passport-local').Strategy
+const FacebookStrategy = require('passport-facebook').Strategy
 
 const User = require('../models/user')
 
@@ -25,6 +26,32 @@ module.exports = app => {
       })
       .catch(err => done(err, false))
   }))
+
+  passport.use(new FacebookStrategy({
+    clientID: process.env.FACEBOOK_ID,  // 不可以commit，facebook登入超過上限會收費
+    clientSecret: process.env.FACEBOOK_SECRET, // 不可以commit
+    callbackURL: process.env.FACEBOOK_CALLBACK,
+    profileFields: ['email', 'displayName']
+  }, (accessToken, refreshToken, profile, done) => {
+    const { name, email } = profile._json // 解構賦值
+    User.findOne({ email })
+      .then(user => {
+        if (user) return done(null, user)
+        const randomPassword = Math.random().toString(36).slice(-8) // 用facebook登入的使用者一樣會需要產生一組密碼供使用者登入頁面(因為password屬性設定為必填)，toString(36)=a~z+0~9 / slice(-8)=取後面8位
+        bcrypt
+          .genSalt(10)
+          .then(salt => bcrypt.hash(randomPassword, salt))
+          .then(hash => User.create({
+            name,
+            email,
+            password: hash
+          }))
+          .then(user => done(null, user))
+          .catch(err => done(err, false))
+      })
+  }
+  ))
+
   // 設定序列化跟反序列化
   passport.serializeUser((user, done) => {
     done(null, user.id)
